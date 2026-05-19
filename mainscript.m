@@ -11,9 +11,9 @@ masterDataFile = 'CallFile.mat';
 
 % Define the 3 counterbalanced order sequences
 orderPool = { ...
-    {'top', 'center', 'bottom'}, ... % Order 1
-    {'center', 'bottom', 'top'}, ... % Order 2
-    {'bottom', 'top', 'center'}  ... % Order 3
+    {'left', 'center', 'right'}, ... % Order 1
+    {'right', 'bottom', 'left'}, ... % Order 2
+    {'right', 'left', 'center'}  ... % Order 3
 };
 
 % Determine the current participant number based on existing data
