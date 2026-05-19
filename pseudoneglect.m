@@ -21,7 +21,7 @@ ip.addParameter('type', 'line', checkType);
 ip.addParameter('txtSize', [], @isnumeric);     
 
 % FIXED: Added the missing position parameter definition so inputParser recognizes it
-checkPosition = @(p) any(strcmpi(p, {'center', 'top', 'bottom'}));
+checkPosition = @(p) any(strcmpi(p, {'center', 'left', 'right'}));
 ip.addParameter('position', 'center', checkPosition); 
 
 ip.parse(window, rect, screenNumber, varargin{:});
@@ -62,9 +62,9 @@ disp.screenHeight = rect(4);
 
 % Shift horizontally across the X-axis using screenWidth multipliers
 switch lower(trialPos)
-    case 'top'
+    case 'left'
         disp.xcenter = disp.screenWidth * 0.35;    % Left side (35% across width)
-    case 'bottom'
+    case 'right'
         disp.xcenter = disp.screenWidth * 0.65;    % Right side (55% across width)
     otherwise
         disp.xcenter = disp.screenWidth * 0.50;       % Dead center (50% across width)
