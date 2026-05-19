@@ -20,12 +20,17 @@ checkType = @(t) any(strcmpi(t, {'line', 'linear', 'log'}));
 ip.addParameter('type', 'line', checkType);
 ip.addParameter('txtSize', [], @isnumeric);     
 
+% FIXED: Added the missing position parameter definition so inputParser recognizes it
+checkPosition = @(p) any(strcmpi(p, {'center', 'top', 'bottom'}));
+ip.addParameter('position', 'center', checkPosition); 
+
 ip.parse(window, rect, screenNumber, varargin{:});
 
 window       = ip.Results.window;
 rect         = ip.Results.rect;
 screenNumber = ip.Results.screenNumber;
 img_type     = ip.Results.type;
+trialPos     = ip.Results.position; 
 
 if ~isempty(ip.Results.txt)
     show_text = 1;
@@ -54,8 +59,19 @@ end
 % Configure screen geometries
 disp.screenWidth = rect(3);
 disp.screenHeight = rect(4);
-disp.xcenter = disp.screenWidth/2;
-disp.ycenter = disp.screenHeight/2;
+
+% Shift horizontally across the X-axis using screenWidth multipliers
+switch lower(trialPos)
+    case 'top'
+        disp.xcenter = disp.screenWidth * 0.35;    % Left side (35% across width)
+    case 'bottom'
+        disp.xcenter = disp.screenWidth * 0.65;    % Right side (55% across width)
+    otherwise
+        disp.xcenter = disp.screenWidth * 0.50;       % Dead center (50% across width)
+end
+
+% ycenter remains perfectly locked to the vertical middle of the screen
+disp.ycenter = disp.screenHeight / 2; 
 
 disp.scale.width = 964;
 disp.scale.height = 252;
@@ -65,6 +81,7 @@ disp.scale.imagefile = img_file;
 image = imread(disp.scale.imagefile);
 disp.scale.texture = Screen('MakeTexture', window, image);
 
+% Shifting coordinates dynamically wrap around the dynamic xcenter and fixed ycenter
 disp.scale.rect = [[disp.xcenter disp.ycenter]-[0.5*disp.scale.width 0.5*disp.scale.height] [disp.xcenter disp.ycenter]+[0.5*disp.scale.width 0.5*disp.scale.height]];
 Screen('DrawTexture', disp.scale.w, disp.scale.texture, [], disp.scale.rect);
 
@@ -75,8 +92,6 @@ cursor.xmax = cursor.xmin + cursor.width;
 cursor.size = 8;
 cursor.center = cursor.xmin + ceil(cursor.width/2);
 cursor.y = disp.scale.rect(4) - 41;
-
-SetMouse(disp.xcenter, disp.ycenter, window);
 cursor.x = cursor.center;
 
 RatingOnset = GetSecs;
@@ -98,7 +113,7 @@ while getRating
     end
     
     % Draw frame updates dynamically
-    Screen('FillRect', window, [0.5 0.5 0.5]); 
+    Screen('FillRect', window, [0 0 0]); 
     Screen('DrawTexture', window, disp.scale.texture, [], disp.scale.rect);
     
     if show_text
