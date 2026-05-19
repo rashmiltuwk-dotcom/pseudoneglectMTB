@@ -8,10 +8,6 @@ screenNumber = max(Screen('Screens'));
 [window, rect] = PsychImaging('OpenWindow', screenNumber, [0.5 0.5 0.5]);
 
 
-PsychDefaultSetup(2);
-screenNumber = max(Screen('Screens')); 
-[window, rect] = PsychImaging('OpenWindow', screenNumber, [0.5 0.5 0.5]); 
-
 
 ShowCursor('Arrow', window); 
 
