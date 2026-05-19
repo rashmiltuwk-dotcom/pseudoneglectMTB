@@ -12,7 +12,7 @@ masterDataFile = 'CallFile.mat';
 % Define the 3 counterbalanced order sequences
 orderPool = { ...
     {'left', 'center', 'right'}, ... % Order 1
-    {'right', 'bottom', 'left'}, ... % Order 2
+    {'right', 'left', 'center'}, ... % Order 2
     {'right', 'left', 'center'}  ... % Order 3
 };
 
